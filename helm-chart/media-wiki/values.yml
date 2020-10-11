@@ -1,0 +1,34 @@
+image:
+  registry: docker.io
+  repository: app/mediawiki
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# option to specify external database created by DaaS
+externalDatabase:
+  ## Database host
+  host:
+  ## Database port
+  port: 3306
+  ## Database user
+  user: mediawiki
+  ## Database password
+  password:
+  ## Database name
+  database: mediawiki_db
+
+## options for liveness and readiness probes
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
