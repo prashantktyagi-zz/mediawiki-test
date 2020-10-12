@@ -1,21 +1,28 @@
 image:
-  registry: docker.io
-  repository: app/mediawiki
+  repository: mediawiki
   tag: latest
   pullPolicy: IfNotPresent
 
 # option to specify external database created by DaaS
 externalDatabase:
   ## Database host
-  host:
+  host: mediawiki.casgvauz6lqm.us-east-1.rds.amazonaws.com
   ## Database port
   port: 3306
   ## Database user
   user: mediawiki
   ## Database password
-  password:
+  password: password
   ## Database name
   database: mediawiki_db
+
+# resources
+limits:
+    cpu: "250m"
+    memory: "512Mi"
+requests:
+    cpu: "100m"
+    memory: "256Mi"
 
 ## options for liveness and readiness probes
 livenessProbe:

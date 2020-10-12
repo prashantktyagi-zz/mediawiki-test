@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mediawiki
+spec:
+    replicas: 2
+    strategy:
+        type: RollingUpdate
+    selector:
+        matchLabels:
+            app: mediawiki
+    template:
+        metadata:
+            labels:
+                app: mediawiki
+        spec:
+            containers:
+                - name: mediawiki
+                  image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+                  ports:
+                    - containerPort: 80
+                  resources:
+                    limits:
+                        cpu: "{{ .Values.limits.cpu }}"
+                        memory: "{{ .Values.limits.memory }}"
+                    requests:
+                        cpu: "{{ .Values.requests.cpu }}"
+                        memory: "{{ .Values.requests.memory }}"
+                        
