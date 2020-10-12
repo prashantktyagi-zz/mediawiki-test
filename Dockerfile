@@ -26,7 +26,7 @@ COPY apache.conf /etc/httpd/conf/httpd.conf
 USER apache
 
 # Reload apache
-RUN apachectl start
+RUN apachectl -k start
 
 
 
