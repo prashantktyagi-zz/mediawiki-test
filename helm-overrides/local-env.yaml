@@ -1,0 +1,20 @@
+---
+
+deployment:
+  replicas: 2
+
+externalDatabase:
+  ## Database host
+  host: localhost
+  ## Database port
+  port: 3306
+  ## Database user
+  user: mediawiki
+  ## Database password
+  password: 
+  ## Database name
+  database: mediawiki
+
+# mediawiki admin password
+mediawiki:
+  adminpassword: 

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mediawiki
+spec:
+    replicas: {{ .Values.deployment.replicas }}
+    strategy:
+        type: RollingUpdate
+    selector:
+        matchLabels:
+            app: mediawiki
+    template:
+        metadata:
+            labels:
+                app: mediawiki
+        spec:
+            containers:
+                - name: mediawiki
+                  image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+                  env:
+                    - name: MEDIAWIKI_DB_HOST
+                      value: {{ .Values.externalDatabase.host | quote }}
+                    - name: MEDIAWIKI_DB_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: "mediawiki-secret"
+                            key: db-password
+                    - name: MEDIAWIKI_ADMIN_PASS
+                      valueFrom:
+                        secretKeyRef:
+                            name: "mediawiki-secret"
+                            key: mediawiki-password
+                  ports:
+                    - containerPort: 80
+                  {{- if .Values.livenessProbe.enabled }}
+                  livenessProbe:
+                    httpGet:
+                      path: /mediawiki/api.php
+                      port: http
+                    initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+                    periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+                    timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+                    successThreshold: {{ .Values.livenessProbe.successThreshold }}
+                    failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+                  {{- end }}
+                  {{- if .Values.readinessProbe.enabled }}
+                  readinessProbe:
+                    httpGet:
+                      path: /mediawiki/api.php
+                      port: http
+                    initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+                    periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+                    timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+                    successThreshold: {{ .Values.readinessProbe.successThreshold }}
+                    failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+                  {{- end }}                    
+                  resources:
+                    limits:
+                        cpu: "{{ .Values.limits.cpu }}"
+                        memory: "{{ .Values.limits.memory }}"
+                    requests:
+                        cpu: "{{ .Values.requests.cpu }}"
+                        memory: "{{ .Values.requests.memory }}"
+                    
+                        
